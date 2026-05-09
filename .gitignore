@@ -1,0 +1,26 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Node modules (just in case you ever decide to add a build step later)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Temporary or local configuration files
+.env
+.env.local
+
+# Optional: Ignore zipped backups or specific test files you might create locally
+*.zip
+*.tar.gz
