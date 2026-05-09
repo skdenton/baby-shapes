@@ -1,23 +1,51 @@
 # Baby Shape Matcher 🎨
 
-A progressive web app (PWA) for babies and toddlers to learn shapes through drag-and-drop matching. Features colorful shapes with friendly faces, sound effects, haptic feedback, and fireworks celebrations.
+A progressive web app (PWA) for babies and toddlers to learn shapes, numbers, and words through drag-and-drop matching. Features colorful shapes with friendly faces, sound effects, speech synthesis, haptic feedback, and fireworks celebrations.
 
 ## Features
 
-- **Shape Matching** — Drag colorful shapes (circle, square, triangle, star) to matching outlines
-- **Progressive Difficulty** — Levels scale from 1 shape up to 4
-- **Sensory Feedback** — Web Audio API tones, haptic vibration, sparkle particles
-- **Fireworks Celebrations** — Particle fireworks on match and level completion
-- **Interactive Background** — Draggable parallax grid with sparkle trail
-- **Fullscreen Mode** — Immersive play via fullscreen toggle button
-- **Offline Support** — Service worker caches the app shell for offline play
-- **Installable PWA** — Add to home screen on iOS and Android
+### Gameplay
+- **3-Phase Progression** — Shapes → Numbers → Words, difficulty increases each level
+  - **Shapes (L1–5):** Circle, Square, Triangle, Star, Heart — 1 to 5 shapes per level
+  - **Numbers (L6–11):** Match digits 0–10 — 2 to 6 number tiles per level
+  - **Words (L12+):** Spell words by matching individual letters (cat, dog, sun, etc.)
+- **Randomized Layout** — Targets and items randomly placed on opposite sides (top/bottom or left/right)
+- **Pulsing Rainbow Targets** — Unmatched target holes glow and cycle through colors
+- **Female Voice** — Says the shape/number/letter name on match; announces full word on completion
+- **Progressive Difficulty** — Levels auto-advance with fireworks celebrations
+
+### Sensory Feedback
+- **Web Audio API** — Procedural pickup, drop, match, and win sound effects
+- **Speech Synthesis** — Spoken names reinforce learning
+- **Haptic Vibration** — Tactile feedback on touch devices
+- **Sparkle Trails** — Particle effects follow dragged items
+- **Fireworks** — Explode on match and level completion
+
+### Child Safety
+- **Parent Gate** — Fullscreen exit requires solving a math problem (e.g., "What is 11 + 5?")
+- **Back Button Trap** — Prevents accidental navigation via browser back
+- **Fullscreen Lock** — 🔒 icon indicates child-lock mode is active
+
+### Android Screen Pinning (Recommended)
+For true device-level locking (prevents app switching, home button, etc.):
+1. Open **Settings → Security → Screen Pinning** (or search "pin" in Settings)
+2. Enable Screen Pinning
+3. Open the app and enter fullscreen mode
+4. Open Recent Apps, tap the app's icon → **Pin this app**
+5. To unpin: press Back + Overview simultaneously, then enter your device PIN
+
+### iOS Guided Access (Recommended)
+1. Open **Settings → Accessibility → Guided Access** and enable it
+2. Set a passcode
+3. Open the app, triple-click the Side/Home button → **Start**
+4. Triple-click again and enter passcode to exit
 
 ## Tech Stack
 
-- **Single-file HTML/CSS/JS** — No build step, no framework dependencies
+- **HTML/CSS/JS** — No build step, no framework dependencies
 - **Canvas 2D** — All rendering via `<canvas>` element
-- **Web Audio API** — Procedural sound effects (no audio files needed)
+- **Web Audio API** — Procedural sound effects (no audio files)
+- **Web Speech API** — `speechSynthesis` for spoken names
 - **Service Worker** — Cache-first offline strategy (`sw.js`)
 - **PWA Manifest** — Standalone display, themed chrome (`manifest.json`)
 
@@ -38,32 +66,27 @@ A progressive web app (PWA) for babies and toddlers to learn shapes through drag
 
 1. Go to [Netlify Drop](https://app.netlify.com/drop)
 2. Drag the entire project folder onto the page
-3. Netlify will deploy immediately
-
-### Custom Domain (Optional)
-
-1. In Netlify dashboard → **Domain settings** → **Add custom domain**
-2. Follow DNS configuration instructions
-3. Netlify automatically provisions a free SSL certificate
 
 ## Project Structure
 
 ```
 baby-shapes/
-├── index.html        # Main app — HTML, CSS, and game logic (single file)
-├── manifest.json     # PWA manifest — app name, icons, theme
-├── sw.js             # Service worker — offline caching strategy
-├── netlify.toml      # Netlify deploy config — headers, caching
+├── index.html        # Main app shell — HTML, CSS, parent gate UI
+├── js/
+│   ├── engine.js     # Audio, voice, drawing primitives, particles
+│   ├── levels.js     # Level config, layout engine, level creation
+│   └── main.js       # Game state, render loop, input, parent gate, init
+├── manifest.json     # PWA manifest
+├── sw.js             # Service worker — offline caching
+├── netlify.toml      # Netlify deploy config
 ├── icons/
-│   ├── icon-192.png  # PWA icon (192x192)
-│   └── icon-512.png  # PWA icon (512x512)
+│   ├── icon-192.png  # PWA icon (192×192)
+│   └── icon-512.png  # PWA icon (512×512)
 ├── .gitignore
 └── README.md
 ```
 
 ## Local Development
-
-Since this is a static site, you can serve it with any local HTTP server:
 
 ```bash
 # Python
@@ -75,4 +98,4 @@ npx serve .
 # VS Code — use the "Live Server" extension
 ```
 
-> **Note:** Service workers require HTTPS or `localhost`. Opening `index.html` directly as a `file://` URL will prevent SW registration.
+> **Note:** Service workers require HTTPS or `localhost`. Opening `index.html` directly as a `file://` URL will prevent SW registration and speech synthesis.

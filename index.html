@@ -22,12 +22,9 @@
     <meta name="apple-mobile-web-app-title" content="Shape Match">
 
     <style>
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
             background-color: #0d1b2a;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -36,88 +33,81 @@
             -webkit-user-select: none;
             -webkit-touch-callout: none;
         }
+        canvas { display: block; width: 100%; height: 100%; }
 
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
+        /* Start screen */
         #start-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            cursor: pointer;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 10; cursor: pointer;
         }
-
         .pulse-button {
-            background-color: #ff4081;
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 2rem;
-            border-radius: 50px;
+            background-color: #ff4081; color: white; border: none;
+            padding: 20px 40px; font-size: 2rem; border-radius: 50px;
             font-weight: bold;
             box-shadow: 0 8px 15px rgba(255, 64, 129, 0.3);
             animation: pulse 1.5s infinite;
             pointer-events: none;
         }
-
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 8px 15px rgba(255, 64, 129, 0.3);
-            }
-
-            50% {
-                transform: scale(1.1);
-                box-shadow: 0 15px 25px rgba(255, 64, 129, 0.5);
-            }
-
-            100% {
-                transform: scale(1);
-                box-shadow: 0 8px 15px rgba(255, 64, 129, 0.3);
-            }
+            0%   { transform: scale(1);   box-shadow: 0 8px 15px rgba(255,64,129,0.3); }
+            50%  { transform: scale(1.1); box-shadow: 0 15px 25px rgba(255,64,129,0.5); }
+            100% { transform: scale(1);   box-shadow: 0 8px 15px rgba(255,64,129,0.3); }
         }
+        h1 { color: #00838f; text-align: center; margin-bottom: 40px; font-size: 3rem; }
 
-        h1 {
-            color: #00838f;
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 3rem;
-        }
-
+        /* Fullscreen / lock button */
         #fullscreen-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            color: white;
-            font-size: 28px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 20;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.8);
+            color: white; font-size: 28px;
+            width: 50px; height: 50px; border-radius: 50%;
+            cursor: pointer; z-index: 20;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             transition: background 0.3s;
         }
+        #fullscreen-btn:active { background: rgba(255,255,255,0.5); }
 
-        #fullscreen-btn:active {
-            background: rgba(255, 255, 255, 0.5);
+        /* Parent gate modal */
+        #parent-gate {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            justify-content: center; align-items: center;
+            flex-direction: column;
         }
+        .gate-box {
+            background: #1a2a3a; border-radius: 16px;
+            padding: 30px 40px; text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            max-width: 320px; width: 90%;
+        }
+        .gate-box h2 { color: #80cbc4; margin: 0 0 8px; font-size: 1.3rem; }
+        .gate-box p { color: #b0bec5; margin: 0 0 20px; font-size: 0.9rem; }
+        #gate-question {
+            color: white; font-size: 1.8rem; font-weight: bold;
+            margin-bottom: 16px; display: block;
+        }
+        #gate-answer {
+            width: 80px; padding: 10px; font-size: 1.5rem;
+            text-align: center; border-radius: 8px;
+            border: 2px solid #80cbc4; background: #0d1b2a;
+            color: white; outline: none;
+        }
+        #gate-answer:focus { border-color: #ff4081; }
+        #gate-error { color: #ff5252; margin-top: 8px; min-height: 20px; font-size: 0.9rem; }
+        .gate-buttons { margin-top: 16px; display: flex; gap: 10px; justify-content: center; }
+        .gate-buttons button {
+            padding: 10px 24px; border-radius: 8px; border: none;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+        }
+        #gate-submit { background: #00bcd4; color: white; }
+        #gate-cancel { background: #455a64; color: #cfd8dc; }
     </style>
 </head>
 
@@ -130,554 +120,38 @@
         <button class="pulse-button">Tap to Play!</button>
     </div>
 
+    <!-- Parent gate for child lock exit -->
+    <div id="parent-gate">
+        <div class="gate-box">
+            <h2>🔒 Parent Check</h2>
+            <p>Solve to exit fullscreen:</p>
+            <span id="gate-question">What is 7 + 5?</span>
+            <input type="number" id="gate-answer" inputmode="numeric" autocomplete="off">
+            <div id="gate-error"></div>
+            <div class="gate-buttons">
+                <button id="gate-submit">Submit</button>
+                <button id="gate-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <canvas id="gameCanvas"></canvas>
 
+    <!-- PWA Service Worker Registration -->
     <script>
-        // --- PWA Service Worker Registration ---
-        // Registers the real sw.js file for offline caching and install prompt
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
-                    .then((reg) => console.log('Service Worker registered, scope:', reg.scope))
-                    .catch((err) => console.warn('Service Worker registration failed:', err));
+                    .then(r => console.log('SW registered, scope:', r.scope))
+                    .catch(e => console.warn('SW registration failed:', e));
             });
         }
-
-        // --- Game Setup ---
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const startScreen = document.getElementById('start-screen');
-
-        let width, height;
-        let shapes = [];
-        let holes = [];
-        let particles = [];
-        let gameActive = false;
-        let lastMoveTime = 0;
-        let currentLevel = 1;
-
-        // Background interactivity variables
-        let bgOffsetX = 0, bgOffsetY = 0;
-        let bgVelX = 0, bgVelY = 0;
-        let bgDragging = false;
-        let bgPointerId = null;
-        let lastPointerX = 0, lastPointerY = 0;
-        let lastBgSoundTime = 0;
-
-        // --- Audio Engine (Web Audio API) ---
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let actx;
-
-        function initAudio() {
-            if (!actx) actx = new AudioContext();
-            if (actx.state === 'suspended') actx.resume();
-        }
-
-        function playTone(freq, type = 'sine', duration = 0.1, vol = 0.1, slideFreq = null) {
-            if (!actx) return;
-            const osc = actx.createOscillator();
-            const gain = actx.createGain();
-
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, actx.currentTime);
-            if (slideFreq) {
-                osc.frequency.exponentialRampToValueAtTime(slideFreq, actx.currentTime + duration);
-            }
-
-            gain.gain.setValueAtTime(vol, actx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + duration);
-
-            osc.connect(gain);
-            gain.connect(actx.destination);
-
-            osc.start();
-            osc.stop(actx.currentTime + duration);
-        }
-
-        const sounds = {
-            pickup: () => playTone(300, 'triangle', 0.2, 0.3, 600),
-            drop: () => playTone(250, 'sine', 0.2, 0.2, 150),
-            moveSparkle: () => playTone(800 + Math.random() * 600, 'sine', 0.1, 0.05),
-            bgMove: () => playTone(200 + Math.random() * 300, 'sine', 0.2, 0.03),
-            match: () => {
-                playTone(440, 'square', 0.3, 0.1);
-                setTimeout(() => playTone(554, 'square', 0.3, 0.1), 100);
-                setTimeout(() => playTone(659, 'square', 0.4, 0.1), 200);
-                setTimeout(() => playTone(880, 'square', 0.5, 0.1), 300);
-            },
-            win: () => {
-                for (let i = 0; i < 20; i++) {
-                    setTimeout(() => {
-                        playTone(400 + Math.random() * 800, 'sine', 0.3, 0.1);
-                    }, i * 100);
-                }
-            }
-        };
-
-        // --- Game Logic ---
-        const shapeTypes = ['circle', 'square', 'triangle', 'star'];
-        const colors = ['#FF5252', '#448AFF', '#FFEB3B', '#69F0AE'];
-
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-
-            if (gameActive) setupLevel(false);
-        }
-        window.addEventListener('resize', resize);
-
-        function createShapes() {
-            shapes = [];
-            holes = [];
-
-            let numShapes = Math.min(currentLevel, 4); // Cap at 4 shapes max
-            const size = Math.min(width, height) * 0.12;
-            const spacing = width / numShapes;
-            const topY = height * 0.25;
-            const bottomY = height * 0.75;
-
-            let availableIndices = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
-            let selectedIndices = availableIndices.slice(0, numShapes);
-
-            for (let i = 0; i < numShapes; i++) {
-                let shapeIdx = selectedIndices[i];
-                holes.push({
-                    type: shapeTypes[shapeIdx],
-                    x: (spacing / 2) + (i * spacing),
-                    y: topY,
-                    size: size,
-                    color: colors[shapeIdx]
-                });
-            }
-
-            let startPositions = Array.from({ length: numShapes }, (_, i) => i).sort(() => Math.random() - 0.5);
-
-            for (let i = 0; i < numShapes; i++) {
-                let posIndex = startPositions[i];
-                let shapeIdx = selectedIndices[i];
-                shapes.push({
-                    type: shapeTypes[shapeIdx],
-                    x: (spacing / 2) + (posIndex * spacing),
-                    y: bottomY + (Math.random() * 40 - 20),
-                    startX: (spacing / 2) + (posIndex * spacing),
-                    startY: bottomY,
-                    size: size,
-                    color: colors[shapeIdx],
-                    isMatched: false,
-                    isDragging: false,
-                    pointerId: null,
-                    dragOffsetX: 0,
-                    dragOffsetY: 0
-                });
-            }
-        }
-
-        function setupLevel(resetMatches = true) {
-            if (resetMatches || shapes.length === 0) {
-                createShapes();
-            } else {
-                let numShapes = shapes.length;
-                const size = Math.min(width, height) * 0.12;
-                const spacing = width / numShapes;
-                const topY = height * 0.25;
-                const bottomY = height * 0.75;
-
-                holes.forEach((h, i) => {
-                    h.x = (spacing / 2) + (i * spacing);
-                    h.y = topY;
-                    h.size = size;
-                });
-
-                let unmatchedIndex = 0;
-                shapes.forEach((s) => {
-                    s.size = size;
-                    if (s.isMatched) {
-                        let hole = holes.find(h => h.type === s.type);
-                        s.x = hole.x;
-                        s.y = hole.y;
-                    } else {
-                        s.startX = (spacing / 2) + (unmatchedIndex * spacing);
-                        s.startY = bottomY;
-                        s.x = s.startX;
-                        s.y = bottomY;
-                        unmatchedIndex++;
-                    }
-                });
-            }
-        }
-
-        // --- Drawing Engine ---
-        function drawPath(ctx, type, x, y, size) {
-            ctx.beginPath();
-            if (type === 'circle') {
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-            } else if (type === 'square') {
-                ctx.rect(x - size * 0.9, y - size * 0.9, size * 1.8, size * 1.8);
-            } else if (type === 'triangle') {
-                ctx.moveTo(x, y - size);
-                ctx.lineTo(x + size, y + size * 0.8);
-                ctx.lineTo(x - size, y + size * 0.8);
-            } else if (type === 'star') {
-                const spikes = 5;
-                const outerRadius = size * 1.1;
-                const innerRadius = size * 0.5;
-                for (let i = 0; i < spikes * 2; i++) {
-                    const radius = i % 2 === 0 ? outerRadius : innerRadius;
-                    const angle = (i * Math.PI) / spikes - Math.PI / 2;
-                    if (i === 0) ctx.moveTo(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
-                    else ctx.lineTo(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
-                }
-            }
-            ctx.closePath();
-        }
-
-        function drawFace(ctx, x, y, size) {
-            ctx.fillStyle = '#111';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.3, y - size * 0.1, size * 0.12, 0, Math.PI * 2);
-            ctx.arc(x + size * 0.3, y - size * 0.1, size * 0.12, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(x - size * 0.33, y - size * 0.13, size * 0.04, 0, Math.PI * 2);
-            ctx.arc(x + size * 0.27, y - size * 0.13, size * 0.04, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#111';
-            ctx.lineWidth = size * 0.08;
-            ctx.lineCap = 'round';
-            ctx.beginPath();
-            ctx.arc(x, y + size * 0.2, size * 0.4, 0.1 * Math.PI, 0.9 * Math.PI);
-            ctx.stroke();
-        }
-
-        function createSparkle(x, y, color) {
-            particles.push({
-                x: x + (Math.random() * 40 - 20),
-                y: y + (Math.random() * 40 - 20),
-                vx: (Math.random() - 0.5) * 2,
-                vy: (Math.random() - 0.5) * 2,
-                size: Math.random() * 6 + 4,
-                color: color,
-                life: 1.0,
-                decay: Math.random() * 0.05 + 0.05,
-                type: 'sparkle'
-            });
-        }
-
-        function createFireworks(x, y, color) {
-            for (let i = 0; i < 80; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 15 + 5;
-                particles.push({
-                    x: x, y: y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    size: Math.random() * 12 + 3,
-                    color: Math.random() > 0.3 ? color : 'white',
-                    life: 1.0,
-                    decay: Math.random() * 0.01 + 0.01,
-                    type: 'firework'
-                });
-            }
-        }
-
-        function updateAndDrawParticles() {
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.type === 'firework') {
-                    p.vy += 0.4; // Gravity
-                }
-
-                p.life -= p.decay;
-
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                    continue;
-                }
-
-                ctx.globalAlpha = p.life;
-                ctx.fillStyle = p.color;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            ctx.globalAlpha = 1.0;
-        }
-
-        function render() {
-            if (!bgDragging) {
-                bgOffsetX += bgVelX;
-                bgOffsetY += bgVelY;
-                bgVelX *= 0.95;
-                bgVelY *= 0.95;
-            }
-
-            ctx.fillStyle = '#0d1b2a';
-            ctx.fillRect(0, 0, width, height);
-
-            const bgSpacing = 120;
-            let startX = (bgOffsetX % bgSpacing) - bgSpacing;
-            let startY = (bgOffsetY % bgSpacing) - bgSpacing;
-
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
-
-            for (let x = startX; x < width + bgSpacing; x += bgSpacing) {
-                for (let y = startY; y < height + bgSpacing; y += bgSpacing) {
-                    let gridX = Math.floor((x - bgOffsetX) / bgSpacing);
-                    let gridY = Math.floor((y - bgOffsetY) / bgSpacing);
-                    let type = Math.abs(gridX + gridY * 3) % 3;
-
-                    ctx.beginPath();
-                    if (type === 0) {
-                        ctx.arc(x + bgSpacing / 2, y + bgSpacing / 2, 25, 0, Math.PI * 2);
-                    } else if (type === 1) {
-                        ctx.rect(x + bgSpacing / 2 - 20, y + bgSpacing / 2 - 20, 40, 40);
-                    } else {
-                        ctx.moveTo(x + bgSpacing / 2, y + bgSpacing / 2 - 25);
-                        ctx.lineTo(x + bgSpacing / 2 + 25, y + bgSpacing / 2 + 20);
-                        ctx.lineTo(x + bgSpacing / 2 - 25, y + bgSpacing / 2 + 20);
-                        ctx.closePath();
-                    }
-                    ctx.stroke();
-                }
-            }
-
-            holes.forEach(hole => {
-                drawPath(ctx, hole.type, hole.x, hole.y, hole.size);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-                ctx.fill();
-                ctx.lineWidth = 6;
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-                ctx.stroke();
-            });
-
-            const sortedShapes = [...shapes].sort((a, b) => {
-                if (a.isDragging && !b.isDragging) return 1;
-                if (!a.isDragging && b.isDragging) return -1;
-                if (a.isMatched && !b.isMatched) return -1;
-                if (!a.isMatched && b.isMatched) return 1;
-                return 0;
-            });
-
-            sortedShapes.forEach(shape => {
-                let renderX = shape.x;
-                let renderY = shape.y;
-
-                if (shape.isDragging) {
-                    const wobble = Math.sin(Date.now() / 30) * 4;
-                    renderX += wobble;
-                    renderY += wobble;
-
-                    ctx.shadowColor = 'white';
-                    ctx.shadowBlur = 30 + Math.sin(Date.now() / 100) * 15;
-                } else {
-                    ctx.shadowColor = 'transparent';
-                }
-
-                drawPath(ctx, shape.type, renderX, renderY, shape.size);
-                ctx.fillStyle = shape.color;
-                ctx.fill();
-                ctx.shadowColor = 'transparent';
-
-                ctx.lineWidth = 6;
-                ctx.strokeStyle = shape.isDragging ? 'white' : 'rgba(255, 255, 255, 0.8)';
-                ctx.stroke();
-
-                drawFace(ctx, renderX, renderY, shape.size);
-            });
-
-            updateAndDrawParticles();
-
-            if (gameActive) requestAnimationFrame(render);
-        }
-
-        // --- Interaction ---
-        function isInside(x, y, shape) {
-            const tolerance = shape.size * 1.5;
-            return x >= shape.x - tolerance && x <= shape.x + tolerance &&
-                y >= shape.y - tolerance && y <= shape.y + tolerance;
-        }
-
-        function checkWin() {
-            if (shapes.every(s => s.isMatched)) {
-                sounds.win();
-                setTimeout(() => createFireworks(width * 0.2, height * 0.3, colors[0]), 0);
-                setTimeout(() => createFireworks(width * 0.8, height * 0.4, colors[1]), 300);
-                setTimeout(() => createFireworks(width * 0.5, height * 0.2, colors[2]), 600);
-                setTimeout(() => createFireworks(width * 0.3, height * 0.6, colors[3]), 900);
-
-                currentLevel++;
-
-                setTimeout(() => {
-                    setupLevel(true);
-                }, 4000);
-            }
-        }
-
-        canvas.addEventListener('pointerdown', (e) => {
-            if (!gameActive) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            let hitShape = false;
-
-            for (let i = shapes.length - 1; i >= 0; i--) {
-                const shape = shapes[i];
-                if (!shape.isDragging && isInside(x, y, shape)) {
-                    shape.isDragging = true;
-                    shape.isMatched = false;
-                    shape.pointerId = e.pointerId;
-                    shape.dragOffsetX = shape.x - x;
-                    shape.dragOffsetY = shape.y - y;
-                    sounds.pickup();
-
-                    if (navigator.vibrate) navigator.vibrate(50);
-
-                    shapes.push(shapes.splice(i, 1)[0]);
-                    hitShape = true;
-                    break;
-                }
-            }
-
-            if (!hitShape) {
-                bgDragging = true;
-                bgPointerId = e.pointerId;
-                lastPointerX = x;
-                lastPointerY = y;
-                if (navigator.vibrate) navigator.vibrate(15);
-            }
-        });
-
-        canvas.addEventListener('pointermove', (e) => {
-            if (!gameActive) return;
-            const shape = shapes.find(s => s.pointerId === e.pointerId);
-
-            if (shape && shape.isDragging) {
-                const rect = canvas.getBoundingClientRect();
-                const oldX = shape.x;
-                const oldY = shape.y;
-
-                let newX = (e.clientX - rect.left) + shape.dragOffsetX;
-                let newY = (e.clientY - rect.top) + shape.dragOffsetY;
-
-                const margin = shape.size;
-                shape.x = Math.max(margin, Math.min(width - margin, newX));
-                shape.y = Math.max(margin, Math.min(height - margin, newY));
-
-                const distMoved = Math.hypot(shape.x - oldX, shape.y - oldY);
-
-                if (distMoved > 2) {
-                    createSparkle(shape.x, shape.y, shape.color);
-
-                    const now = Date.now();
-                    if (now - lastMoveTime > 150) {
-                        sounds.moveSparkle();
-                        if (navigator.vibrate) navigator.vibrate(20);
-                        lastMoveTime = now;
-                    }
-                }
-            } else if (bgDragging && bgPointerId === e.pointerId) {
-                const rect = canvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                let dx = x - lastPointerX;
-                let dy = y - lastPointerY;
-                lastPointerX = x;
-                lastPointerY = y;
-
-                bgOffsetX += dx;
-                bgOffsetY += dy;
-
-                bgVelX = dx * 0.8;
-                bgVelY = dy * 0.8;
-
-                const distMoved = Math.hypot(dx, dy);
-                if (distMoved > 1) {
-                    const bgColors = ['#ff8a80', '#8c9eff', '#b9f6ca', '#ffff8d', '#e040fb'];
-                    const randColor = bgColors[Math.floor(Math.random() * bgColors.length)];
-                    createSparkle(x, y, randColor);
-
-                    const now = Date.now();
-                    if (now - lastBgSoundTime > 100) {
-                        sounds.bgMove();
-                        if (navigator.vibrate) navigator.vibrate(10);
-                        lastBgSoundTime = now;
-                    }
-                }
-            }
-        });
-
-        function handlePointerUp(e) {
-            if (!gameActive) return;
-
-            if (bgPointerId === e.pointerId) {
-                bgDragging = false;
-                bgPointerId = null;
-                return;
-            }
-
-            const shape = shapes.find(s => s.pointerId === e.pointerId);
-            if (shape && shape.isDragging) {
-                shape.isDragging = false;
-                shape.pointerId = null;
-
-                const hole = holes.find(h => h.type === shape.type);
-                const dist = Math.hypot(shape.x - hole.x, shape.y - hole.y);
-
-                if (dist < shape.size * 2.5) {
-                    shape.x = hole.x;
-                    shape.y = hole.y;
-                    shape.isMatched = true;
-                    sounds.match();
-
-                    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-
-                    createFireworks(hole.x, hole.y, shape.color);
-                    checkWin();
-                } else {
-                    sounds.drop();
-                }
-            }
-        }
-
-        canvas.addEventListener('pointerup', handlePointerUp);
-        canvas.addEventListener('pointercancel', handlePointerUp);
-
-        // --- Initialization ---
-        startScreen.addEventListener('click', () => {
-            initAudio();
-            startScreen.style.display = 'none';
-            gameActive = true;
-            resize();
-            setupLevel(true);
-            render();
-        });
-
-        const fsBtn = document.getElementById('fullscreen-btn');
-        fsBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
-                });
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
-        });
-
-        resize();
-
     </script>
-</body>
 
+    <!-- Game Engine (loaded in order: engine → levels → main) -->
+    <script src="/js/engine.js"></script>
+    <script src="/js/levels.js"></script>
+    <script src="/js/main.js"></script>
+
+</body>
 </html>

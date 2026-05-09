@@ -4,7 +4,7 @@
 // Bump CACHE_VERSION to force a cache refresh on deploy
 // ============================================================================
 
-const CACHE_VERSION = 'baby-shapes-v1';
+const CACHE_VERSION = 'baby-shapes-v2';
 
 // Files that make up the "app shell" — everything needed for offline play
 const APP_SHELL = [
@@ -12,7 +12,10 @@ const APP_SHELL = [
     '/index.html',
     '/manifest.json',
     '/icons/icon-192.png',
-    '/icons/icon-512.png'
+    '/icons/icon-512.png',
+    '/js/engine.js',
+    '/js/levels.js',
+    '/js/main.js'
 ];
 
 // ----------------------------------------------------------------------------
